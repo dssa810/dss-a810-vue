@@ -9,7 +9,6 @@
     </div>
     <h1 class="header-title">Weekly History</h1>
     <div class="div-graph">
-      <VueChartJs></VueChartJs>
     </div>
     <div class="div-history">
       
@@ -18,16 +17,16 @@
 </template>
 
 <script>
-import VueChartJs from '@/components/common/VueChartJs.vue'; 
 export default {
   components: {
-    VueChartJs
   },
   data() {
     return {
       listOfMissions: [],
       listOfPlayerState: [],
       hobbyId: '',
+      pointList: '',
+      pointSummary: '',
     };
   },
   mounted() {
@@ -39,6 +38,12 @@ export default {
     },
     todayMission() {
       return this.$store.getters.getTodayMission;
+    },
+    fetchedPointList() {
+      return this.$store.getters.getPointList;
+    },
+    fetchedPointSummary() {
+      return this.$store.getters.getPointSummary;
     }
   },
   watch: {
@@ -47,21 +52,33 @@ export default {
       handler() {
         this.listOfMissions = this.todayMission;
       }
+    },
+    fetchedPointList: {
+      deep: true,
+      handler() {
+        this.pointList = this.fetchedPointList;
+      }
+    },
+    fetchedPointSummary: {
+      deep: true,
+      handler() {
+        this.pointSummary = this.fetchedPointSummary;
+      }
     }
   },
   methods: {
     initComp() {
       this.hobbyId = this.$route.params.hobbyId;
-      // this.fetchMissions();
+      this.fetchPoints();
     },
-    async fetchMissions() {
+    async fetchPoints() {
       try {
         // 비즈니스 로직
         const params = {
           token: this.token,
           missionId: this.hobbyId,
         };
-        await this.$store.dispatch('FETCH_MISSIONS', params);
+        await this.$store.dispatch('FETCH_POINTS', params);
       } catch (error) {
         console.log(error);
       } finally {
