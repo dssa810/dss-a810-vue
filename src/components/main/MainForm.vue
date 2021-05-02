@@ -124,15 +124,43 @@ export default {
   computed: {
     token() {
       return this.$store.getters.getToken;
+    },
+    point() {
+      return this.$store.getters.getPoint;
+    },
+    hobbys() {
+      return this.$store.getters.getHobbys;
+    },
+    choice() {
+      return this.$store.getters.getChoice;
     }
   },
+  mounted() {
+    this.initComp();
+  },
   methods: {
+    initComp() {
+      this.fetchMain();
+    },
     toMissionDetail(hobbyId) {
       this.$router.push(`/hobby/${hobbyId}/missions`);
     },
     toPoints(contentType) {
       if(contentType=='point') {
         this.$router.push(`/points`)
+      }
+    },
+    async fetchMain() {
+      var token = this.token;
+      console.log('ddd', token);
+      try {
+        const params = {
+          token: token
+        };
+        await this.$store.dispatch('FETCH_MAIN', params);
+      } catch (error) {
+        console.log(error);
+      } finally {
       }
     }
   }
