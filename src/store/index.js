@@ -8,6 +8,7 @@ import {
 } from '@/utils/cookies';
 import { loginUser } from '@/api/auth';
 import { fetchMain } from '@/api/main';
+import { fetchPoints } from '@/api/points';
 import { fetchMissions, fetchMission } from '@/api/missions';
 
 Vue.use(Vuex);
@@ -21,6 +22,8 @@ export default new Vuex.Store({
     choice: [],
     todayMission: [],
     mission: {},
+    pointList: [],
+    pointSummary: [],
   },
   getters: {
     isLogin(state) {
@@ -43,6 +46,12 @@ export default new Vuex.Store({
     },
     getMissoin(state) {
       return state.mission;
+    },
+    getPointList(state) {
+      return state.pointList;
+    },
+    getPointSummary(state) {
+      return state.pointSummary;
     }
   },
   mutations: {
@@ -72,6 +81,12 @@ export default new Vuex.Store({
     },
     setMission(state, mission) {
       state.mission = mission;
+    },
+    setPointList(state, pointList) {
+      state.pointList = pointList;
+    },
+    setPointSummary(state, pointSummary) {
+      state.pointSummary = pointSummary;
     }
   },
   actions: {
@@ -100,6 +115,12 @@ export default new Vuex.Store({
       const { data } = await fetchMission(params);
       console.log(data);
       commit('setMission', data);
+    },
+    async FETCH_POINTS({ commit }, params) {
+      const { data } = await fetchPoints(params);
+      console.log(data);
+      commit('setPointList', data.pointList);
+      commit('setPointSummary', data.pointSumary);
     }
   },
 });
